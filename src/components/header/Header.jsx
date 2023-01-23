@@ -12,25 +12,23 @@ const Header = () => {
 
   const [value, setValue] = useState(0);
 
-  function onMessage(message) {
-    if (message.destinationName === "mqtt-async-test/value")
-        setValue(parseInt(message.payloadString));
-  }
-
-  useEffect(() => {
-    client.connect( {
+        function onMessage(message) {
+          if (message.destinationName === "mqtt-async-test/value")
+              setValue(parseInt(message.payloadString));
+        }
+    const options = {
+      timeout: 3,
       onSuccess: () => { 
-      console.log("Connected!");
-      client.subscribe("mqtt-async-test/value");
-      client.onMessageArrived = onMessage;
-    },
-    onFailure: () => {
-      console.log("Failed to connect!"); 
-    }
-  });
-  }, [])
-
-
+        console.log("Connected!");
+        client.subscribe("mqtt-async-test/value");
+        client.onMessageArrived = onMessage;
+      },
+      onFailure: () => {
+        console.log("Failed to connect!"); 
+      }
+    };
+    client.onMessageArrived = onMessage;
+    client.connect(options);
 
   return (
     <div className=' flex gap-8 p-4 items-center flex-row w-screen bg-gray-500'>
