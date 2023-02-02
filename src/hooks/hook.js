@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import mqtt from "mqtt";
+import mqtt from "precompiled-mqtt";
 const useMqtt = (url) => {
   const [plc, setPlc] = useState({});
   const [client, setClient] = useState(null);

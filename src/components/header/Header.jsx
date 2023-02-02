@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Paho from "paho-mqtt";
 import { addTag, setConnection, setMessageSend } from "../../slices/stateSlice";
 import React, { useEffect } from "react";
-import useMqtt from "../utils/hook";
+import useMqtt from "../../hooks/hook";
 
 const Header = () => {
   const dispatch = useDispatch();
