@@ -2,59 +2,61 @@ import { useSelector, useDispatch } from "react-redux";
 import Paho from "paho-mqtt";
 import { addTag, setConnection, setMessageSend } from "../../slices/stateSlice";
 import React, { useEffect } from "react";
+import useMqtt from "../utils/hook";
 
 const Header = () => {
   const dispatch = useDispatch();
   const machineState = useSelector((state) => state.stateSlice);
+  const { plc, connectionStatus, setTag } = useMqtt("ws://localhost:9001");
 
-  var client = new Paho.Client(
-    "localhost",
-    Number(9001),
-    `OIYA-${parseInt(Math.random() * 100)}`
-  );
+  // var client = new Paho.Client(
+  //   "localhost",
+  //   Number(9001),
+  //   `OIYA-${parseInt(Math.random() * 100)}`
+  // );
 
-  useEffect(() => {
-    if (machineState.messageSend) {
-      const payload = `${machineState.openInput.ref.replace(/\s/g, "")}=${
-        machineState.openInput.input
-      }`;
+  // useEffect(() => {
+  //   if (machineState.messageSend) {
+  //     const payload = `${machineState.openInput.ref.replace(/\s/g, "")}=${
+  //       machineState.openInput.input
+  //     }`;
 
-      try {
-        const message = new Paho.MQTT.Message(payload);
-        message.destinationName = "setTag";
-        dispatch(setMessageSend(false));
-        client.send(message);
-      } catch {
-        console.log("failed to send message");
-      }
+  //     try {
+  //       const message = new Paho.MQTT.Message(payload);
+  //       message.destinationName = "setTag";
+  //       dispatch(setMessageSend(false));
+  //       client.send(message);
+  //     } catch {
+  //       console.log("failed to send message");
+  //     }
 
-      return;
-    }
-  }, [
-    machineState.messageSend,
-    machineState.openInput.ref,
-    machineState.openInput.value,
-  ]);
+  //     return;
+  //   }
+  // }, [
+  //   machineState.messageSend,
+  //   machineState.openInput.ref,
+  //   machineState.openInput.value,
+  // ]);
 
-  function onMessage(message) {
-    dispatch(addTag(JSON.parse(message.payloadString).aiWinderVerticalPos));
-  }
-  const options = {
-    timeout: 3,
-    onSuccess: () => {
-      console.log("Connected!");
-      client.subscribe("PHAMPLC");
-      dispatch(setConnection(true));
-      client.onMessageArrived = onMessage;
-    },
-    onFailure: () => {
-      console.log("Failed to connect!");
-      dispatch(setConnection(false));
-    },
-  };
+  // function onMessage(message) {
+  //   dispatch(addTag(JSON.parse(message.payloadString).aiWinderVerticalPos));
+  // }
+  // const options = {
+  //   timeout: 3,
+  //   onSuccess: () => {
+  //     console.log("Connected!");
+  //     client.subscribe("PHAMPLC");
+  //     dispatch(setConnection(true));
+  //     client.onMessageArrived = onMessage;
+  //   },
+  //   onFailure: () => {
+  //     console.log("Failed to connect!");
+  //     dispatch(setConnection(false));
+  //   },
+  // };
 
-  client.onMessageArrived = onMessage;
-  client.connect(options);
+  // client.onMessageArrived = onMessage;
+  // client.connect(options);
 
   return (
     <div className=" flex gap-8 p-4 items-center flex-row w-full bg-gray-700">
@@ -75,7 +77,7 @@ const Header = () => {
               : "bg-gray-400/50 text-black/50"
           }  py-4 px-6 rounded-full text-white font-semibold text-xl`}
         >
-          Status: {machineState.connected ? "Connected" : "Disconnected"}
+          Status: {connectionStatus ? "Connected" : "Disconnected"}
         </div>
         <div className=" py-4 px-6 rounded-full font-semibold text-white text-xl bg-[#3DA6EC]">
           User: {machineState.user}
