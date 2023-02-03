@@ -1,13 +1,56 @@
 import React from "react";
 import logo from "../../images/OIYAicon.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useMqtt from "../../hooks/hook";
-
+import { setNotification } from "../../slices/stateSlice";
 export const ControlsBar = () => {
+  const dispatch = useDispatch();
   const machineState = useSelector((state) => state.stateSlice);
-  const { plc, connectionStatus, setTag } = useMqtt("ws://localhost:9001");
+  const { setTag } = useMqtt("ws://localhost:9001");
 
-  const startButton = () => setTag("hmi_Start", true);
+  const startButton = () => {
+    try {
+      setTag("hmi_Start", true);
+      dispatch(
+        setNotification({
+          message: `Successfully Started Machine`,
+          success: true,
+          open: true,
+        })
+      );
+      setTimeout(() => {
+        dispatch(
+          setNotification({
+            message: "",
+            success: false,
+            open: false,
+          })
+        );
+      }, 3000);
+    } catch {
+      dispatch(
+        setNotification({
+          message: `Failed to start Machine`,
+          success: false,
+          open: true,
+        })
+      );
+      setTimeout(() => {
+        dispatch(
+          setNotification({
+            message: "",
+            success: false,
+            open: false,
+          })
+        );
+      }, 3000);
+    }
+  };
+
+  const stopButton = () => {
+    setTag("hmi_Stop", true);
+    setTag("hmi_Start", false);
+  };
 
   return (
     <div className="h-full items-center ml-auto px-2 pt-8 pb-4 flex flex-col bg-gray-700 gap-5">
@@ -65,6 +108,7 @@ export const ControlsBar = () => {
       </button>
       <button
         className={`py-4 flex-col flex items-center px-8  text-white font-semibold shadow-lg rounded-lg text-2xl bg-red-600 `}
+        onClick={stopButton}
       >
         <p>Stop</p>
         <svg

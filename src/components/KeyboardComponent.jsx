@@ -7,11 +7,9 @@ import {
   setInputValue,
   setMessageSend,
 } from "../slices/stateSlice";
-import Paho from "paho-mqtt";
 
 const KeyboardComponent = () => {
   const dispatch = useDispatch();
-  const currentState = useSelector((state) => state.stateSlice);
   const numpad = {
     default: ["1 2 3 {bksp}", "4 5 6 {enter}", "7 8 9 0"],
   };

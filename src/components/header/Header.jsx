@@ -1,81 +1,84 @@
 import { useSelector, useDispatch } from "react-redux";
-import Paho from "paho-mqtt";
-import { addTag, setConnection, setMessageSend } from "../../slices/stateSlice";
+import {
+  resetInput,
+  setMessageSend,
+  setNotification,
+} from "../../slices/stateSlice";
 import React, { useEffect } from "react";
 import useMqtt from "../../hooks/hook";
+import { Notification } from "./Notification";
+import { getR010State, getModeState } from "./headerUtils";
 
 const Header = () => {
   const dispatch = useDispatch();
   const machineState = useSelector((state) => state.stateSlice);
-  const { plc, connectionStatus, setTag } = useMqtt("ws://localhost:9001");
+  const { connectionStatus, setTag } = useMqtt("ws://localhost:9001");
 
-  // var client = new Paho.Client(
-  //   "localhost",
-  //   Number(9001),
-  //   `OIYA-${parseInt(Math.random() * 100)}`
-  // );
-
-  // useEffect(() => {
-  //   if (machineState.messageSend) {
-  //     const payload = `${machineState.openInput.ref.replace(/\s/g, "")}=${
-  //       machineState.openInput.input
-  //     }`;
-
-  //     try {
-  //       const message = new Paho.MQTT.Message(payload);
-  //       message.destinationName = "setTag";
-  //       dispatch(setMessageSend(false));
-  //       client.send(message);
-  //     } catch {
-  //       console.log("failed to send message");
-  //     }
-
-  //     return;
-  //   }
-  // }, [
-  //   machineState.messageSend,
-  //   machineState.openInput.ref,
-  //   machineState.openInput.value,
-  // ]);
-
-  // function onMessage(message) {
-  //   dispatch(addTag(JSON.parse(message.payloadString).aiWinderVerticalPos));
-  // }
-  // const options = {
-  //   timeout: 3,
-  //   onSuccess: () => {
-  //     console.log("Connected!");
-  //     client.subscribe("PHAMPLC");
-  //     dispatch(setConnection(true));
-  //     client.onMessageArrived = onMessage;
-  //   },
-  //   onFailure: () => {
-  //     console.log("Failed to connect!");
-  //     dispatch(setConnection(false));
-  //   },
-  // };
-
-  // client.onMessageArrived = onMessage;
-  // client.connect(options);
+  useEffect(() => {
+    if (machineState.messageSend) {
+      try {
+        setTag(machineState.openInput.ref, machineState.openInput.input);
+        dispatch(setMessageSend(false));
+        dispatch(
+          setNotification({
+            message: `Success setting ${machineState.openInput.ref} to ${machineState.openInput.input}`,
+            success: true,
+            open: true,
+          })
+        );
+        dispatch(resetInput());
+        setTimeout(() => {
+          dispatch(
+            setNotification({
+              message: "",
+              success: false,
+              open: false,
+            })
+          );
+        }, 5000);
+      } catch {
+        dispatch(resetInput());
+        dispatch(setMessageSend(false));
+        dispatch(
+          setNotification({
+            message: `Failed setting ${machineState.openInput.ref} to ${machineState.openInput.input}`,
+            success: false,
+            open: true,
+          })
+        );
+        setTimeout(() => {
+          dispatch(
+            setNotification({
+              message: "",
+              success: false,
+              open: false,
+            })
+          );
+        }, 5000);
+      }
+    }
+  }, [dispatch, machineState.messageSend, machineState.openInput.ref, setTag]);
 
   return (
     <div className=" flex gap-8 p-4 items-center flex-row w-full bg-gray-700">
-      <div
-        className={`${
-          machineState.safetyTripped
-            ? "bg-yellow-600 text-white animate-pulse"
-            : "bg-gray-400 text-black/50 opacity-50"
-        } py-4 px-8  shadow-lg font-semibold rounded-lg text-center text-xl `}
-      >
-        Saftey Tripped
+      {machineState.notification.open && <Notification />}
+      <div className=" flex flex-col gap-2 w-1/5">
+        <div
+          className={`${"bg-black text-yellow-500"} py-4 px-8  shadow-lg font-semibold rounded-lg text-center text-lg `}
+        >
+          {getR010State(machineState.R010)}
+        </div>
+        <div
+          className={` bg-red-700 text-white p-4 shadow-lg font-semibold rounded-lg text-center text-lg `}
+        >
+          {getModeState(machineState.mode)}
+        </div>
       </div>
       <div className="w-full flex gap-2 text-center flex-col">
         <div
           className={`${
-            machineState.connected
-              ? "bg-green-700"
-              : "bg-gray-400/50 text-black/50"
-          }  py-4 px-6 rounded-full text-white font-semibold text-xl`}
+            connectionStatus ? "bg-green-700" : "bg-gray-400/50 text-black/50"
+          } p-4 rounded-full text-white font-semibold text-xl`}
         >
           Status: {connectionStatus ? "Connected" : "Disconnected"}
         </div>

@@ -17,8 +17,14 @@ const initialState = {
     input: "",
   },
   messageSend: false,
+  notification: {
+    message: "",
+    success: false,
+    open: false,
+  },
   connected: false,
-  safetyTripped: false,
+  R010: 0,
+  mode: 0,
   alarmTriggered: false,
   user: "Operator",
   tags: {
@@ -61,6 +67,15 @@ export const stateSlice = createSlice({
       state.openInput.input = action.payload;
     },
 
+    resetInput: (state) => {
+      state.openInput.ref = "";
+      state.openInput.input = "";
+    },
+
+    setNotification: (state, action) => {
+      state.notification = action.payload;
+    },
+
     setMessageSend: (state, action) => {
       state.messageSend = action.payload;
     },
@@ -75,6 +90,8 @@ export const {
   setOpenInput,
   setInputValue,
   setMessageSend,
+  resetInput,
+  setNotification,
 } = stateSlice.actions;
 
 export default stateSlice.reducer;
