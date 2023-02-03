@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import mqtt from "precompiled-mqtt";
+import { addTag } from "../slices/stateSlice";
+import { useDispatch } from "react-redux";
 const useMqtt = (url) => {
+  const dispatch = useDispatch();
   const [plc, setPlc] = useState({});
   const [client, setClient] = useState(null);
   const [connectionStatus, setConnectionStatus] = useState(false);
@@ -18,6 +21,7 @@ const useMqtt = (url) => {
     client.subscribe("PHAMPLC");
     client.on("message", (topic, payload, packet) => {
       setPlc(JSON.parse(payload.toString()));
+      dispatch(addTag(JSON.parse(payload.toString())));
       console.log(payload.toString());
     });
 

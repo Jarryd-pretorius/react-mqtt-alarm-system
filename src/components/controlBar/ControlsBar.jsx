@@ -1,9 +1,13 @@
 import React from "react";
 import logo from "../../images/OIYAicon.png";
 import { useSelector } from "react-redux";
+import useMqtt from "../../hooks/hook";
 
 export const ControlsBar = () => {
   const machineState = useSelector((state) => state.stateSlice);
+  const { plc, connectionStatus, setTag } = useMqtt("ws://localhost:9001");
+
+  const startButton = () => setTag("hmi_Start", true);
 
   return (
     <div className="h-full items-center ml-auto px-2 pt-8 pb-4 flex flex-col bg-gray-700 gap-5">
@@ -34,6 +38,7 @@ export const ControlsBar = () => {
         )}
       </div>
       <button
+        onClick={startButton}
         className={`py-4 flex-col flex items-center px-8 text-white font-semibold shadow-lg rounded-lg text-2xl bg-green-700 `}
       >
         <p>Start</p>
