@@ -20,7 +20,7 @@ const useMqtt = (url) => {
       setClient(client);
       console.log("hook CONNECTED");
     });
-    client.subscribe("alarms");
+    client.subscribe("EmPB");
     client.on("message", (topic, payload, packet) => {
       setPlc(JSON.stringify(JSON.parse(payload.toString()).alarmTypes));
 

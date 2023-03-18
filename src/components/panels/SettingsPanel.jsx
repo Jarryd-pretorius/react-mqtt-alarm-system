@@ -1,14 +1,15 @@
 import React, { useMemo } from "react";
-import { useSelector } from "react-redux";
 import { useTable } from "react-table";
 
 const SettingsPanel = () => {
-  const currentState = useSelector((state) => state.stateSlice);
+  const items = JSON.parse(localStorage.getItem("alarmLog"));
 
-  const data = useMemo(
-    () => currentState.alarms.alarmLog,
-    [currentState.alarms.alarmLog]
-  );
+  const data = useMemo(() => {
+    if (items == null) {
+      return [];
+    }
+    return items;
+  }, [items]);
   const columns = useMemo(
     () => [
       {
@@ -60,7 +61,7 @@ const SettingsPanel = () => {
           className="flex max-h-[90%] scrollbar h-[500px] bg-black/40  flex-col overflow-auto w-full"
           {...getTableBodyProps()}
         >
-          {!data && (
+          {data.length <= 0 && (
             <div className=" w-full h-full text-2xl font-medium  gap-2 text-white/40 flex flex-col items-center  justify-center">
               <svg
                 className="w-12 h-12 text-white/30 "

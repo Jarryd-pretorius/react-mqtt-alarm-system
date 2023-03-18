@@ -11,6 +11,7 @@
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-preset-react-app": "^3.1.2",
+    "date-fns": "^2.29.3",
     "emailjs": "^4.0.1",
     "mqtt": "^4.3.7",
     "precompiled-mqtt": "^4.3.14-beta",

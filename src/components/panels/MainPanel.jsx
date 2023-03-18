@@ -1,15 +1,20 @@
 import React, { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import emailjs from "@emailjs/browser";
+import SettingsPanel from "../panels/SettingsPanel";
+import { intervalToDuration } from "date-fns";
 import useMqtt from "../../hooks/hook";
 import { useEffect } from "react";
-import { setConnection, setMessageSend } from "../../slices/stateSlice";
-import { useState } from "react";
+import {
+  setConnection,
+  setMessageSend,
+  addAlarmLogs,
+  tags,
+} from "../../slices/stateSlice";
 
 const MainPanel = () => {
   const dispatch = useDispatch();
   const machineState = useSelector((state) => state.stateSlice);
-  const [machine, setMachine] = useState(machineState);
   const { connectionStatus, setTag } = useMqtt(
     "mqtt://mosquitto@127.0.0.1:1883"
   );
@@ -67,23 +72,70 @@ const MainPanel = () => {
     }
   }, [connectionStatus, dispatch, machineState.messageSend, setTag]);
 
+  const logAlarmData = useCallback((location) => {
+    const items = JSON.parse(localStorage.getItem("alarmLog"));
+
+    if (items == null) {
+      const newList = [
+        {
+          id: "1",
+          location: location,
+          timeStamp: new Date(),
+          time: new Date().toLocaleTimeString(),
+          date: new Date().toLocaleDateString(),
+        },
+      ];
+      localStorage.setItem("alarmLog", JSON.stringify(newList));
+      dispatch(addAlarmLogs(newList));
+      return;
+    }
+
+    const newArray = [];
+
+    items.forEach((item) => {
+      const dur = intervalToDuration({
+        start: new Date(),
+        end: new Date(item.timeStamp),
+      });
+      if (dur.days >= 30 || dur.months > 0) {
+        return;
+      }
+      newArray.push(item);
+    });
+
+    const newList = [
+      {
+        id: items.length + 1,
+        location: location,
+        timeStamp: new Date(),
+        time: new Date().toLocaleTimeString(),
+        date: new Date().toLocaleDateString(),
+      },
+      ...items,
+    ];
+
+    localStorage.setItem("alarmLog", JSON.stringify(newList));
+    dispatch(addAlarmLogs(newList));
+  }, []);
+
   useMemo(() => {
     for (const [key, value] of Object.entries(machineState.alarms.alarmTypes)) {
-      if (value === 0) {
+      if (value === 1) {
         sendEmail(key);
+        logAlarmData(key);
       }
     }
-  }, [machineState.alarms.alarmTypes, sendEmail]);
+  }, [logAlarmData, machineState.alarms.alarmTypes, sendEmail]);
 
   const SendMessage = (location) => {
-    setTag({ tag: location, value: 0 });
+    setTag({ tag: location, value: 1 });
   };
 
-  function getAlarmColor(state, location) {
+  function getAlarmColor(state) {
     switch (state) {
-      case 0:
-        return "bg-red-600 animate-pulse";
       case 1:
+        return "bg-red-600 animate-pulse";
+      case 0:
         return "bg-green-700";
       case 2:
         return "bg-green-700 animate-pulse";
@@ -98,19 +150,21 @@ const MainPanel = () => {
 
   return (
     <>
-      {machineState && (
-        <div className="flex text-white gap-5 flex-col flex-wrap max-h-[600px] p-6">
-          <div className=" bg-gray-700 shadow-lg flex-row w-[300px] items-center flex h-[100px] rounded-md ">
-            <h1 className=" text-2xl px-12 py-4 w-[150px]">Foyer</h1>
+      {machineState.openPage === tags.Main && (
+        <div className=" text-white gap-10 grid grid-cols-3 max-h-[600px] p-6">
+          <div className=" bg-gray-700 shadow-lg flex-row w-[200px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
+            <h1 className=" text-xl text-center px-6 py-4 lg:min-w-[200px]">
+              Wrapper Shed
+            </h1>
             <button
               disabled={machineState.alarms.alarmTypes.foyer === 4}
               onClick={() => SendMessage("foyer")}
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.foyer,
                 "Foyer"
-              )} font-semibold rounded-r-lg h-full w-full text-xl min-w-[200px]  items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
             >
-              {machineState.alarms.alarmTypes.foyer === 0 && (
+              {machineState.alarms.alarmTypes.foyer === 1 && (
                 <svg
                   className="w-6 h-6 text-white "
                   xmlns="http://www.w3.org/2000/svg"
@@ -126,17 +180,19 @@ const MainPanel = () => {
                 : "Alarm"}
             </button>
           </div>
-          <div className=" bg-gray-700 shadow-lg flex-row items-center w-[300px] flex h-[100px] rounded-md ">
-            <h1 className=" text-2xl px-12 py-4 max-w-[200px]">Entrance</h1>
+          <div className=" bg-gray-700 shadow-lg flex-row w-[200px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
+            <h1 className=" text-xl text-center px-6 py-4 lg:min-w-[200px]">
+              Entrance
+            </h1>
             <button
               onClick={() => SendMessage("entrance")}
               disabled={machineState.alarms.alarmTypes.entrance === 4}
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.entrance,
                 "Entrance"
-              )} font-semibold rounded-r-lg h-full w-full text-xl min-w-[200px]  items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
             >
-              {machineState.alarms.alarmTypes.entrance === 0 && (
+              {machineState.alarms.alarmTypes.entrance === 1 && (
                 <svg
                   className="w-6 h-6 text-white "
                   xmlns="http://www.w3.org/2000/svg"
@@ -152,17 +208,19 @@ const MainPanel = () => {
                 : "Alarm"}
             </button>
           </div>
-          <div className=" bg-gray-700 shadow-lg flex-row items-center max-w-[300px] w-[300px] flex h-[100px] rounded-md ">
-            <h1 className=" text-2xl px-12 py-4 max-w-[200px]">Workshop</h1>
+          <div className=" bg-gray-700 shadow-lg flex-row w-[200px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
+            <h1 className=" text-xl text-center px-6 py-4 lg:min-w-[200px]">
+              Workshop
+            </h1>
             <button
               onClick={() => SendMessage("WorkshopStrapper")}
               disabled={machineState.alarms.alarmTypes.workshopStrapper === 4}
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.workshopStrapper,
                 "Workshop Strapper"
-              )} font-semibold rounded-r-lg h-full w-full text-xl min-w-[200px]  items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
             >
-              {machineState.alarms.alarmTypes.workshopStrapper === 0 && (
+              {machineState.alarms.alarmTypes.workshopStrapper === 1 && (
                 <svg
                   className="w-6 h-6 text-white "
                   xmlns="http://www.w3.org/2000/svg"
@@ -178,17 +236,19 @@ const MainPanel = () => {
                 : "Alarm"}
             </button>
           </div>
-          <div className=" bg-gray-700 shadow-lg flex-row items-center w-[300px] flex h-[100px] rounded-md ">
-            <h1 className=" text-2xl px-12 py-4 w-[150px]">Foyer</h1>
+          <div className=" bg-gray-700 shadow-lg flex-row w-[200px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
+            <h1 className=" text-xl text-center px-6 py-4 lg:min-w-[200px]">
+              Foyer
+            </h1>
             <button
               onClick={() => SendMessage("RollerDoor")}
               disabled={machineState.alarms.alarmTypes.rollerDoor === 4}
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.rollerDoor,
                 "Roller Door"
-              )} font-semibold rounded-r-lg h-full w-full text-xl min-w-[200px]  items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
             >
-              {machineState.alarms.alarmTypes.rollerDoor === 0 && (
+              {machineState.alarms.alarmTypes.rollerDoor === 1 && (
                 <svg
                   className="w-6 h-6 text-white "
                   xmlns="http://www.w3.org/2000/svg"
@@ -204,17 +264,19 @@ const MainPanel = () => {
                 : "Alarm"}
             </button>
           </div>
-          <div className=" bg-gray-700 shadow-lg flex-row items-center w-[300px] flex h-[100px] rounded-md ">
-            <h1 className=" text-2xl px-12 py-4 w-[150px]">Foyer</h1>
+          <div className=" bg-gray-700 shadow-lg flex-row w-[200px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
+            <h1 className=" text-xl text-center px-6 py-4 lg:min-w-[200px]">
+              Foyer
+            </h1>
             <button
               onClick={() => SendMessage("Shed")}
               disabled={machineState.alarms.alarmTypes.shed === 4}
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.shed,
                 "Shed"
-              )} font-semibold rounded-r-lg h-full w-full text-xl  items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
             >
-              {machineState.alarms.alarmTypes.shed === 0 && (
+              {machineState.alarms.alarmTypes.shed === 1 && (
                 <svg
                   className="w-6 h-6 text-white "
                   xmlns="http://www.w3.org/2000/svg"
@@ -230,17 +292,19 @@ const MainPanel = () => {
                 : "Alarm"}
             </button>
           </div>
-          <div className=" bg-gray-700 shadow-lg flex-row items-center w-[300px] flex h-[100px] rounded-md ">
-            <h1 className=" text-2xl px-12 py-4 w-[150px]">Foyer</h1>
+          <div className=" bg-gray-700 shadow-lg flex-row w-[200px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
+            <h1 className=" text-xl text-center px-6 py-4 lg:min-w-[200px]">
+              Foyer
+            </h1>
             <button
               onClick={() => SendMessage("WrapperShed")}
               disabled={machineState.alarms.alarmTypes.wrapperShed === 4}
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.wrapperShed,
                 "Wrapper Shed"
-              )} font-semibold rounded-r-lg h-full w-full text-xl  items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
             >
-              {machineState.alarms.alarmTypes.wrapperShed === 0 && (
+              {machineState.alarms.alarmTypes.wrapperShed === 1 && (
                 <svg
                   className="w-6 h-6 text-white "
                   xmlns="http://www.w3.org/2000/svg"
@@ -256,17 +320,19 @@ const MainPanel = () => {
                 : "Alarm"}
             </button>
           </div>
-          <div className=" bg-gray-700 shadow-lg flex-row items-center w-[300px] flex h-[100px] rounded-md ">
-            <h1 className=" text-2xl px-12 py-4 w-[150px]">Foyer</h1>
+          <div className=" bg-gray-700 shadow-lg flex-row w-[200px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
+            <h1 className=" text-xl text-center px-6 py-4 lg:min-w-[200px]">
+              Foyer
+            </h1>
             <button
               onClick={() => SendMessage("Warehouse")}
               disabled={machineState.alarms.alarmTypes.warehouse === 4}
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.warehouse,
                 "Warehouse"
-              )} font-semibold rounded-r-lg h-full w-full text-xl  items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
             >
-              {machineState.alarms.alarmTypes.warehouse === 0 && (
+              {machineState.alarms.alarmTypes.warehouse === 1 && (
                 <svg
                   className="w-6 h-6 text-white "
                   xmlns="http://www.w3.org/2000/svg"
@@ -283,6 +349,10 @@ const MainPanel = () => {
             </button>
           </div>
         </div>
+      )}
+
+      {machineState && machineState.openPage === tags.Settings && (
+        <SettingsPanel />
       )}
     </>
   );

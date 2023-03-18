@@ -14,13 +14,13 @@ const initialState = {
   alarms: {
     alarmLog: [],
     alarmTypes: {
-      foyer: 1,
-      entrance: 1,
-      workshopStrapper: 1,
-      rollerDoor: 1,
-      shed: 1,
-      wrapperShed: 1,
-      warehouse: 1,
+      foyer: 0,
+      entrance: 0,
+      workshopStrapper: 0,
+      rollerDoor: 0,
+      shed: 0,
+      wrapperShed: 0,
+      warehouse: 0,
     },
   },
 
@@ -43,6 +43,9 @@ export const stateSlice = createSlice({
         console.log("return");
       }
       state.alarms = action.payload;
+    },
+    addAlarmLogs: (state, action) => {
+      state.alarms.alarmLog = action.payload;
     },
     setConnection: (state, action) => {
       state.connected = action.payload;
@@ -71,6 +74,7 @@ export const {
   setOpenPage,
   setConnection,
   setOpenKeyBoard,
+  addAlarmLogs,
   setOpenInput,
   setInputValue,
   setMessageSend,
