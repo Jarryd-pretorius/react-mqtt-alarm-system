@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { tags, setOpenPage } from "../../slices/stateSlice";
+import { tags, setOpenPage, setMessageSend } from "../../slices/stateSlice";
 
 const Footer = () => {
   const openPage = useSelector((state) => state.stateSlice.openPage);
@@ -24,7 +24,15 @@ const Footer = () => {
         } `}
         onClick={() => dispatch(setOpenPage(tags.Settings))}
       >
-        Settings
+        Alarm Log
+      </button>
+      <button
+        className={` py-6 px-10  ml-auto rounded-lg font-semibold text-xl hover:bg-[#3DA6EC] hover:text-white bg-gray-300
+          
+        `}
+        onClick={() => dispatch(setMessageSend(true))}
+      >
+        Reset{" "}
       </button>
     </div>
   );

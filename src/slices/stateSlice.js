@@ -11,11 +11,20 @@ export const inputFieldType = {
 
 const initialState = {
   openPage: tags.Main,
-  keyBoardActive: false,
-  openInput: {
-    ref: "",
-    input: "",
+  alarms: {
+    alarmLog: [],
+    alarmTypes: {
+      foyer: 1,
+      entrance: 1,
+      workshopStrapper: 1,
+      rollerDoor: 1,
+      shed: 1,
+      wrapperShed: 1,
+      warehouse: 1,
+    },
   },
+
+  keyBoardActive: false,
   messageSend: false,
   notification: {
     message: "",
@@ -23,21 +32,6 @@ const initialState = {
     open: false,
   },
   connected: false,
-  R010: 0,
-  mode: 0,
-  alarmTriggered: false,
-  user: "Operator",
-  tags: {
-    aiWinderVerticalPos: 2000,
-    lrActualVelocity: 30,
-    iWasherChuteLowSensor: true,
-    iNutChuteFullSensor: true,
-    iNutChuteLowSensor: false,
-    iBaseInPos: true,
-    iWasherHopperReloadSensor: false,
-    iNutHopperReloadSensor: true,
-  },
-  stage: "R50",
 };
 
 export const stateSlice = createSlice({
@@ -45,7 +39,10 @@ export const stateSlice = createSlice({
   initialState,
   reducers: {
     addTag: (state, action) => {
-      state.tags = action.payload;
+      if (state.alarms === action.payload) {
+        console.log("return");
+      }
+      state.alarms = action.payload;
     },
     setConnection: (state, action) => {
       state.connected = action.payload;
@@ -57,19 +54,6 @@ export const stateSlice = createSlice({
 
     setOpenKeyBoard: (state, action) => {
       state.keyBoardActive = action.payload;
-    },
-
-    setOpenInput: (state, action) => {
-      state.openInput.ref = action.payload;
-    },
-
-    setInputValue: (state, action) => {
-      state.openInput.input = action.payload;
-    },
-
-    resetInput: (state) => {
-      state.openInput.ref = "";
-      state.openInput.input = "";
     },
 
     setNotification: (state, action) => {

@@ -1,9 +1,7 @@
-import "./App.css";
 import React from "react";
 import BodyComponent from "./components/body/BodyComponent";
 import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
-import ControlsBar from "./components/controlBar/ControlsBar";
 
 function App() {
   return (
@@ -13,7 +11,6 @@ function App() {
         <BodyComponent />
         <Footer />
       </div>
-      <ControlsBar />
     </div>
   );
 }

@@ -1,28 +1,36 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import mqtt from "precompiled-mqtt";
 import { addTag } from "../slices/stateSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 const useMqtt = (url) => {
   const dispatch = useDispatch();
   const [plc, setPlc] = useState({});
   const [client, setClient] = useState(null);
   const [connectionStatus, setConnectionStatus] = useState(false);
+  const currentState = useSelector((state) => state.stateSlice);
+
   // const [messages, setMessages] = React.useState([]);
-  const setTag = (tag, value) => {
-    client.publish("setTag", JSON.stringify({ tag, value }));
+  const setTag = (value) => {
+    client.publish("publish/alarm", JSON.stringify(value));
   };
   useEffect(() => {
-    const client = mqtt.connect(url); //"ws://localhost:8888"
+    const client = mqtt.connect("ws://localhost:9001"); //"ws://localhost:8888"
     client.on("connect", () => {
       setConnectionStatus(true);
       setClient(client);
       console.log("hook CONNECTED");
     });
-    client.subscribe("PHAMPLC");
+    client.subscribe("alarms");
     client.on("message", (topic, payload, packet) => {
-      setPlc(JSON.parse(payload.toString()));
-      dispatch(addTag(JSON.parse(payload.toString())));
-      console.log(payload.toString());
+      setPlc(JSON.stringify(JSON.parse(payload.toString()).alarmTypes));
+
+      if (
+        JSON.stringify(JSON.parse(payload.toString()).alarmTypes) !==
+        JSON.stringify(currentState.alarms.alarmTypes)
+      ) {
+        dispatch(addTag(JSON.parse(payload.toString())));
+        console.log(JSON.stringify(JSON.parse(payload.toString()).alarmTypes));
+      }
     });
 
     client.on("offline", () => {
@@ -39,7 +47,7 @@ const useMqtt = (url) => {
       // client.off("message");
       client.end();
     };
-  }, []);
+  }, [currentState.alarms.alarmTypes, dispatch, plc]);
 
   return { plc, connectionStatus, setTag };
 };
