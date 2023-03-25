@@ -14,13 +14,13 @@ const initialState = {
   alarms: {
     alarmLog: [],
     alarmTypes: {
-      foyer: 0,
-      entrance: 0,
-      workshopStrapper: 0,
-      rollerDoor: 0,
-      shed: 0,
-      wrapperShed: 0,
-      warehouse: 0,
+      EMPB0: 0,
+      EMPB1: 0,
+      EMPB2: 0,
+      EMPB3: 0,
+      EMPB4: 0,
+      EMPB5: 0,
+      EMPB6: 0,
     },
   },
 
@@ -51,16 +51,52 @@ export const stateSlice = createSlice({
       state.connected = action.payload;
     },
 
+    setEMPB0: (state, action) => {
+      console.log(true);
+      if (action.payload === state.alarms.alarmTypes.EMPB0) {
+        return;
+      }
+      state.alarms.alarmTypes.EMPB0 = action.payload;
+    },
+    setEMPB1: (state, action) => {
+      if (action.payload === state.alarms.alarmTypes.EMPB1) {
+        return;
+      }
+      state.alarms.alarmTypes.EMPB1 = action.payload;
+    },
+    setEMPB2: (state, action) => {
+      if (action.payload === state.alarms.alarmTypes.EMPB2) {
+        return;
+      }
+      state.alarms.alarmTypes.EMPB2 = action.payload;
+    },
+    setEMPB3: (state, action) => {
+      if (action.payload === state.alarms.alarmTypes.EMPB3) {
+        return;
+      }
+      state.alarms.alarmTypes.EMPB3 = action.payload;
+    },
+    setEMPB4: (state, action) => {
+      if (action.payload === state.alarms.alarmTypes.EMPB4) {
+        return;
+      }
+      state.alarms.alarmTypes.EMPB4 = action.payload;
+    },
+    setEMPB5: (state, action) => {
+      if (action.payload === state.alarms.alarmTypes.EMPB5) {
+        return;
+      }
+      state.alarms.alarmTypes.EMPB5 = action.payload;
+    },
+    setEMPB6: (state, action) => {
+      if (action.payload === state.alarms.alarmTypes.EMPB6) {
+        return;
+      }
+      state.alarms.alarmTypes.EMPB6 = action.payload;
+    },
+
     setOpenPage: (state, action) => {
       state.openPage = action.payload;
-    },
-
-    setOpenKeyBoard: (state, action) => {
-      state.keyBoardActive = action.payload;
-    },
-
-    setNotification: (state, action) => {
-      state.notification = action.payload;
     },
 
     setMessageSend: (state, action) => {
@@ -71,6 +107,13 @@ export const stateSlice = createSlice({
 
 export const {
   addTag,
+  setEMPB0,
+  setEMPB1,
+  setEMPB2,
+  setEMPB3,
+  setEMPB4,
+  setEMPB5,
+  setEMPB6,
   setOpenPage,
   setConnection,
   setOpenKeyBoard,

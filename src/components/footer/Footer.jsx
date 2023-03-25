@@ -7,7 +7,7 @@ const Footer = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className=" flex gap-8 py-6 px-16 items-center flex-row w-full bg-gray-700">
+    <div className=" flex gap-8 py-6 px-16 items-center sticky bottom-0 flex-row w-full bg-gray-700">
       <button
         className={`py-6 px-10 rounded-lg font-semibold  text-xl ${
           openPage === tags.Main ? "bg-[#3DA6EC] text-white" : " bg-gray-300"

@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import mqtt from "precompiled-mqtt";
-import { addTag } from "../slices/stateSlice";
+import {
+  setEMPB0,
+  setEMPB1,
+  setEMPB2,
+  setEMPB3,
+  setEMPB4,
+  setEMPB5,
+  setEMPB6,
+} from "../slices/stateSlice";
 import { useDispatch, useSelector } from "react-redux";
 const useMqtt = (url) => {
   const dispatch = useDispatch();
@@ -10,9 +18,20 @@ const useMqtt = (url) => {
   const currentState = useSelector((state) => state.stateSlice);
 
   // const [messages, setMessages] = React.useState([]);
-  const setTag = (value) => {
-    client.publish("publish/alarm", JSON.stringify(value));
+  const setTag = (channel, value) => {
+    client.publish(channel, JSON.stringify(value));
   };
+
+  const resetAlarm = () => {
+    client.publish("EMPB/0", JSON.stringify(0));
+    client.publish("EMPB/1", JSON.stringify(0));
+    client.publish("EMPB/2", JSON.stringify(0));
+    client.publish("EMPB/3", JSON.stringify(0));
+    client.publish("EMPB/4", JSON.stringify(0));
+    client.publish("EMPB/5", JSON.stringify(0));
+    client.publish("EMPB/6", JSON.stringify(0));
+  };
+
   useEffect(() => {
     const client = mqtt.connect("ws://localhost:9001"); //"ws://localhost:8888"
     client.on("connect", () => {
@@ -20,16 +39,32 @@ const useMqtt = (url) => {
       setClient(client);
       console.log("hook CONNECTED");
     });
-    client.subscribe("EmPB");
-    client.on("message", (topic, payload, packet) => {
-      setPlc(JSON.stringify(JSON.parse(payload.toString()).alarmTypes));
+    client.subscribe("EMPB/0");
+    client.subscribe("EMPB/1");
+    client.subscribe("EMPB/2");
+    client.subscribe("EMPB/3");
+    client.subscribe("EMPB/4");
+    client.subscribe("EMPB/5");
+    client.subscribe("EMPB/6");
 
-      if (
-        JSON.stringify(JSON.parse(payload.toString()).alarmTypes) !==
-        JSON.stringify(currentState.alarms.alarmTypes)
-      ) {
-        dispatch(addTag(JSON.parse(payload.toString())));
-        console.log(JSON.stringify(JSON.parse(payload.toString()).alarmTypes));
+    client.on("message", (topic, payload, packet) => {
+      switch (topic) {
+        case "EMPB/0":
+          return dispatch(setEMPB0(JSON.parse(payload.toString())));
+        case "EMPB/1":
+          return dispatch(setEMPB1(JSON.parse(payload.toString())));
+        case "EMPB/2":
+          return dispatch(setEMPB2(JSON.parse(payload.toString())));
+        case "EMPB/3":
+          return dispatch(setEMPB3(JSON.parse(payload.toString())));
+        case "EMPB/4":
+          return dispatch(setEMPB4(JSON.parse(payload.toString())));
+        case "EMPB/5":
+          return dispatch(setEMPB5(JSON.parse(payload.toString())));
+        case "EMPB/6":
+          return dispatch(setEMPB6(JSON.parse(payload.toString())));
+        default:
+          return;
       }
     });
 
@@ -49,7 +84,7 @@ const useMqtt = (url) => {
     };
   }, [currentState.alarms.alarmTypes, dispatch, plc]);
 
-  return { plc, connectionStatus, setTag };
+  return { plc, connectionStatus, setTag, resetAlarm };
 };
 
 export default useMqtt;

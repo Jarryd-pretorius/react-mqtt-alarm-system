@@ -38,8 +38,8 @@ const SettingsPanel = () => {
   });
 
   return (
-    <div className=" container w-full  ">
-      <table className=" text-white block  text-lg w-full  h-[500px]">
+    <div className=" flex  container items-center mx-auto w-full max-h-[450px] ">
+      <table className=" text-white block  text-lg w-full ">
         <thead className=" top-0 flex  flex-col sticky w-full">
           {headerGroups.map((headerGroup) => (
             <tr
@@ -58,7 +58,7 @@ const SettingsPanel = () => {
           ))}
         </thead>
         <tbody
-          className="flex max-h-[90%] scrollbar h-[500px] bg-black/40  flex-col overflow-auto w-full"
+          className="flex max-h-[200px]  lg:max-h-[400px] scrollbar bg-black/40  flex-col overflow-auto w-full"
           {...getTableBodyProps()}
         >
           {data.length <= 0 && (
