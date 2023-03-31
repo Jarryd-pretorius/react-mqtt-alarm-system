@@ -52,7 +52,6 @@ export const stateSlice = createSlice({
     },
 
     setEMPB0: (state, action) => {
-      console.log(true);
       if (action.payload === state.alarms.alarmTypes.EMPB0) {
         return;
       }

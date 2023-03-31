@@ -154,7 +154,7 @@ const MainPanel = () => {
       case 1:
         return "bg-red-600 animate-pulse";
       case 0:
-        return "bg-green-700";
+        return "bg-green-700 animate-pulse";
       case 2:
         return "bg-green-700 animate-pulse";
       case 4:
