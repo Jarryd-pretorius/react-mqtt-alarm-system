@@ -15,6 +15,7 @@ import {
 const MainPanel = () => {
   const dispatch = useDispatch();
   const machineState = useSelector((state) => state.stateSlice);
+
   const { connectionStatus, setTag, resetAlarm } = useMqtt(
     "ws://localhost:9001"
   );
@@ -34,23 +35,21 @@ const MainPanel = () => {
       alert_date: today,
     };
 
-    console.log(templateParams);
-
-    // emailjs
-    //   .send(
-    //     "service_dgso4uc",
-    //     "template_3d1x4pr",
-    //     templateParams,
-    //     "C7ASYg3zD9tIvtK1w"
-    //   )
-    //   .then(
-    //     function (response) {
-    //       console.log("SUCCESS!", response.status, response.text);
-    //     },
-    //     function (error) {
-    //       console.log("FAILED...", error);
-    //     }
-    //   );
+    emailjs
+      .send(
+        "service_dgso4uc",
+        "template_3d1x4pr",
+        templateParams,
+        "C7ASYg3zD9tIvtK1w"
+      )
+      .then(
+        function (response) {
+          console.log("SUCCESS!", response.status, response.text);
+        },
+        function (error) {
+          console.log("FAILED...", error);
+        }
+      );
   }, []);
 
   useEffect(() => {
@@ -68,51 +67,54 @@ const MainPanel = () => {
     setTag,
   ]);
 
-  const logAlarmData = useCallback((location) => {
-    const items = JSON.parse(localStorage.getItem("alarmLog"));
+  const logAlarmData = useCallback(
+    (location) => {
+      const items = JSON.parse(localStorage.getItem("alarmLog"));
 
-    if (items == null) {
+      if (items == null) {
+        const newList = [
+          {
+            id: "1",
+            location: location,
+            timeStamp: new Date(),
+            time: new Date().toLocaleTimeString(),
+            date: new Date().toLocaleDateString(),
+          },
+        ];
+        localStorage.setItem("alarmLog", JSON.stringify(newList));
+        dispatch(addAlarmLogs(newList));
+        return;
+      }
+
+      const newArray = [];
+
+      items.forEach((item) => {
+        const dur = intervalToDuration({
+          start: new Date(),
+          end: new Date(item.timeStamp),
+        });
+        if (dur.days >= 30 || dur.months > 0) {
+          return;
+        }
+        newArray.push(item);
+      });
+
       const newList = [
         {
-          id: "1",
+          id: items.length + 1,
           location: location,
           timeStamp: new Date(),
           time: new Date().toLocaleTimeString(),
           date: new Date().toLocaleDateString(),
         },
+        ...items,
       ];
+
       localStorage.setItem("alarmLog", JSON.stringify(newList));
       dispatch(addAlarmLogs(newList));
-      return;
-    }
-
-    const newArray = [];
-
-    items.forEach((item) => {
-      const dur = intervalToDuration({
-        start: new Date(),
-        end: new Date(item.timeStamp),
-      });
-      if (dur.days >= 30 || dur.months > 0) {
-        return;
-      }
-      newArray.push(item);
-    });
-
-    const newList = [
-      {
-        id: items.length + 1,
-        location: location,
-        timeStamp: new Date(),
-        time: new Date().toLocaleTimeString(),
-        date: new Date().toLocaleDateString(),
-      },
-      ...items,
-    ];
-
-    localStorage.setItem("alarmLog", JSON.stringify(newList));
-    dispatch(addAlarmLogs(newList));
-  }, []);
+    },
+    [dispatch]
+  );
 
   function getName(key) {
     switch (key) {
@@ -139,11 +141,20 @@ const MainPanel = () => {
     for (const [key, value] of Object.entries(machineState.alarms.alarmTypes)) {
       if (value === 1) {
         const name = getName(key);
-        sendEmail(name);
+        console.log(machineState.enableEmail);
+        if (machineState.enableEmail) {
+          console.log("email sent!");
+          sendEmail(name);
+        }
         logAlarmData(name);
       }
     }
-  }, [logAlarmData, machineState.alarms.alarmTypes, sendEmail]);
+  }, [
+    logAlarmData,
+    machineState.alarms.alarmTypes,
+    machineState.enableEmail,
+    sendEmail,
+  ]);
 
   const SendMessage = (location) => {
     setTag(location, 1);
