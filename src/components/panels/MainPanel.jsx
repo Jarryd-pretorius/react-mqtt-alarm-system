@@ -168,8 +168,8 @@ const MainPanel = () => {
     <>
       {machineState.openPage === tags.Main && (
         <div className=" text-white gap-10 grid grid-cols-3 p-6">
-          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className=" text-lg text-center px-6 py-4 min-w-[120px] font-medium lg:min-w-[200px]">
+          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[250px] lg:w-[280px] items-center flex h-[100px] rounded-lg ">
+            <h1 className=" text-lg text-center px-6 py-4 min-w-[120px] font-medium ">
               Foyer
             </h1>
             <button
@@ -196,8 +196,8 @@ const MainPanel = () => {
                 : "Alarm"}
             </button>
           </div>
-          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className=" text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
+          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[250px] lg:w-[280px] items-center flex h-[100px] rounded-lg ">
+            <h1 className=" text-center font-medium px-6 py-4 min-w-[120px] ">
               Factory Entrance
             </h1>
             <button
@@ -224,8 +224,8 @@ const MainPanel = () => {
                 : "Alarm"}
             </button>
           </div>
-          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className="  text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
+          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[250px]  lg:w-[280px] items-center flex h-[100px] rounded-lg ">
+            <h1 className="  text-center font-medium px-6 py-4 min-w-[120px] ">
               De-coiler Roller Door
             </h1>
             <button
@@ -252,8 +252,8 @@ const MainPanel = () => {
                 : "Alarm"}
             </button>
           </div>
-          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className=" text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
+          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[250px]  lg:w-[280px] items-center flex h-[100px] rounded-lg ">
+            <h1 className=" text-center font-medium px-6 py-4 min-w-[120px]">
               Main Workshop Door
             </h1>
             <button
@@ -280,8 +280,8 @@ const MainPanel = () => {
                 : "Alarm"}
             </button>
           </div>
-          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className=" text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
+          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[250px] lg:w-[280px] items-center flex h-[100px] rounded-lg ">
+            <h1 className=" text-center font-medium px-6 py-4 min-w-[120px] ">
               PCT Shed
             </h1>
             <button
@@ -308,8 +308,8 @@ const MainPanel = () => {
                 : "Alarm"}
             </button>
           </div>
-          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className=" text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
+          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[250px]  lg:w-[280px] items-center flex h-[100px] rounded-lg ">
+            <h1 className=" text-center font-medium px-6 py-4 min-w-[120px] ">
               Orbital Wrapper Shed
             </h1>
             <button
@@ -336,8 +336,8 @@ const MainPanel = () => {
                 : "Alarm"}
             </button>
           </div>
-          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className="  text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
+          <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[250px]  lg:w-[280px] items-center flex h-[100px] rounded-lg ">
+            <h1 className="  text-center font-medium px-6 py-4 min-w-[120px]">
               Warehouse
             </h1>
             <button
