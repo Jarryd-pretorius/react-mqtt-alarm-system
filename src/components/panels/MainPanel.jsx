@@ -16,7 +16,7 @@ const MainPanel = () => {
   const dispatch = useDispatch();
   const machineState = useSelector((state) => state.stateSlice);
   const { connectionStatus, setTag, resetAlarm } = useMqtt(
-    "mqtt://mosquitto@127.0.0.1:1883"
+    "ws://localhost:9001"
   );
 
   const sendEmail = useCallback((location) => {
@@ -169,7 +169,7 @@ const MainPanel = () => {
       {machineState.openPage === tags.Main && (
         <div className=" text-white gap-10 grid grid-cols-3 p-6">
           <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className=" text-xl text-center px-6 py-4 min-w-[120px] font-medium lg:min-w-[200px]">
+            <h1 className=" text-lg text-center px-6 py-4 min-w-[120px] font-medium lg:min-w-[200px]">
               Foyer
             </h1>
             <button
@@ -178,9 +178,9 @@ const MainPanel = () => {
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.EMPB0,
                 "Foyer"
-              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full  items-center justify-center gap-1 flex flex-col p-2`}
             >
-              <div class="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
+              <div className="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
 
               <svg
                 className="w-6 h-6 text-white "
@@ -197,7 +197,7 @@ const MainPanel = () => {
             </button>
           </div>
           <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className=" text-xl text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
+            <h1 className=" text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
               Factory Entrance
             </h1>
             <button
@@ -206,9 +206,9 @@ const MainPanel = () => {
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.EMPB1,
                 "Entrance"
-              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full items-center justify-center gap-1 flex flex-col p-2`}
             >
-              <div class="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
+              <div className="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
 
               <svg
                 className="w-6 h-6 text-white "
@@ -225,7 +225,7 @@ const MainPanel = () => {
             </button>
           </div>
           <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className=" text-xl text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
+            <h1 className="  text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
               De-coiler Roller Door
             </h1>
             <button
@@ -234,9 +234,9 @@ const MainPanel = () => {
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.EMPB2,
                 "Workshop Strapper"
-              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full items-center justify-center gap-1 flex flex-col p-2`}
             >
-              <div class="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
+              <div className="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
 
               <svg
                 className="w-6 h-6 text-white "
@@ -253,8 +253,8 @@ const MainPanel = () => {
             </button>
           </div>
           <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className=" text-xl text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
-              Main Workshop Strapper Roller Door
+            <h1 className=" text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
+              Main Workshop Door
             </h1>
             <button
               onClick={() => SendMessage("EMPB/3")}
@@ -262,9 +262,9 @@ const MainPanel = () => {
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.EMPB3,
                 "Roller Door"
-              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full items-center justify-center gap-1 flex flex-col p-2`}
             >
-              <div class="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
+              <div className="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
 
               <svg
                 className="w-6 h-6 text-white "
@@ -281,7 +281,7 @@ const MainPanel = () => {
             </button>
           </div>
           <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className=" text-xl text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
+            <h1 className=" text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
               PCT Shed
             </h1>
             <button
@@ -290,9 +290,9 @@ const MainPanel = () => {
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.EMPB4,
                 "Shed"
-              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full items-center justify-center gap-1 flex flex-col p-2`}
             >
-              <div class="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
+              <div className="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
 
               <svg
                 className="w-6 h-6 text-white "
@@ -309,8 +309,8 @@ const MainPanel = () => {
             </button>
           </div>
           <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className=" text-xl text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
-              Orbital Wrapper Shed / Canyonn Solar
+            <h1 className=" text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
+              Orbital Wrapper Shed
             </h1>
             <button
               onClick={() => SendMessage("EMPB/5")}
@@ -318,9 +318,9 @@ const MainPanel = () => {
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.EMPB5,
                 "Wrapper Shed"
-              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full items-center justify-center gap-1 flex flex-col p-2`}
             >
-              <div class="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
+              <div className="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
 
               <svg
                 className="w-6 h-6 text-white "
@@ -337,7 +337,7 @@ const MainPanel = () => {
             </button>
           </div>
           <div className=" bg-gray-700 border border-black shadow-lg flex-row w-[200px] md:w-[250px]  lg:w-[350px] items-center flex h-[100px] rounded-lg ">
-            <h1 className=" text-xl text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
+            <h1 className="  text-center font-medium px-6 py-4 min-w-[120px] lg:min-w-[200px]">
               Warehouse
             </h1>
             <button
@@ -346,9 +346,9 @@ const MainPanel = () => {
               className={`${getAlarmColor(
                 machineState.alarms.alarmTypes.EMPB6,
                 "Warehouse"
-              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full text-xl items-center justify-center gap-1 flex flex-col p-2`}
+              )} font-semibold rounded-xl border-l-4 border-black/50 group relative rounded-r-lg h-full w-full  items-center justify-center gap-1 flex flex-col p-2`}
             >
-              <div class="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
+              <div className="absolute inset-0 w-1 bg-white/5 transition-all duration-[300ms] ease-out group-hover:w-full"></div>
 
               <svg
                 className="w-6 h-6 text-white "

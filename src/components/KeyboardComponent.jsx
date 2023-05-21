@@ -40,7 +40,7 @@ const KeyboardComponent = () => {
   };
 
   return (
-    <div class="absolute w-full h-fit transition-all duration-500 ease-in-out flex flex-col items-center bg-gray-700/90 bottom-0">
+    <div className="absolute w-full h-fit transition-all duration-500 ease-in-out flex flex-col items-center bg-gray-700/90 bottom-0">
       <div className="flex py-2 flex-row w-3/5 items-center ">
         <input
           className=" p-5 my-2 w-full bg-gray-500 rounded-lg text-lg text-white font-semibold"

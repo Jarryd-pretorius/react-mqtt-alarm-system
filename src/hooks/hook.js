@@ -34,7 +34,7 @@ const useMqtt = (url) => {
       setEMPB4timer(EMPB4timer + 1);
       setEMPB5timer(EMPB5timer + 1);
       setEMPB6timer(EMPB6timer + 1);
-    }, 1000);
+    }, 2000);
 
     if (EMPB0timer === 5) {
       dispatch(setEMPB0(4));
@@ -115,7 +115,7 @@ const useMqtt = (url) => {
   };
 
   useEffect(() => {
-    const client = mqtt.connect("ws://localhost:9001"); //"ws://localhost:8888"
+    const client = mqtt.connect(url); //"ws://localhost:8888"
     client.on("connect", () => {
       setConnectionStatus(true);
       setClient(client);
