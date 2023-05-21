@@ -11,6 +11,7 @@ export const inputFieldType = {
 
 const initialState = {
   openPage: tags.Main,
+  enableEmail: false,
   alarms: {
     alarmLog: [],
     alarmTypes: {
@@ -101,6 +102,9 @@ export const stateSlice = createSlice({
     setMessageSend: (state, action) => {
       state.messageSend = action.payload;
     },
+    setEnableEmail: (state, action) => {
+      state.enableEmail = action.payload;
+    },
   },
 });
 
@@ -120,6 +124,7 @@ export const {
   setOpenInput,
   setInputValue,
   setMessageSend,
+  setEnableEmail,
   resetInput,
   setNotification,
 } = stateSlice.actions;
