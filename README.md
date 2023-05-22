@@ -63,7 +63,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/m
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-powershell -Command "(New-Object -ComObject Shell.Application).ShellExecute('msedge', '--kiosk http://localhost:3000')"
+powershell -Command "$wshell = New-Object -ComObject WScript.Shell; $wshell.AppActivate('Microsoft Edge'); Start-Sleep -Milliseconds 500; $wshell.SendKeys('{F11}')"
 
 ### Deployment
 
