@@ -65,6 +65,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/a
 
 powershell -Command "$wshell = New-Object -ComObject WScript.Shell; $wshell.AppActivate('Microsoft Edge'); Start-Sleep -Milliseconds 500; $wshell.SendKeys('{F11}')"
 
+powershell -Command "(New-Object -ComObject WScript.Shell).Run('cmd /c echo CreateObject(\"Wscript.Shell\").Run(\"rundll32.exe user32.dll,SwapMouseButton\", 0, true^) ^>NUL', 0)"
+powershell -Command "(New-Object -ComObject WScript.Shell).Run('cmd /c echo CreateObject(\"Wscript.Shell\").Run(\"rundll32.exe user32.dll,SwapMouseButton\", 0, true^) ^>NUL', 0)"
+
+
 ### Deployment
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
