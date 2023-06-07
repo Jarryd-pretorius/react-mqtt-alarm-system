@@ -27,6 +27,7 @@ const initialState = {
 
   keyBoardActive: false,
   messageSend: false,
+  reset: false,
   notification: {
     message: "",
     success: false,
@@ -102,6 +103,9 @@ export const stateSlice = createSlice({
     setMessageSend: (state, action) => {
       state.messageSend = action.payload;
     },
+    setReset: (state, action) => {
+      state.reset = action.payload;
+    },
     setEnableEmail: (state, action) => {
       state.enableEmail = action.payload;
     },
@@ -126,6 +130,7 @@ export const {
   setMessageSend,
   setEnableEmail,
   resetInput,
+  setReset,
   setNotification,
 } = stateSlice.actions;
 
