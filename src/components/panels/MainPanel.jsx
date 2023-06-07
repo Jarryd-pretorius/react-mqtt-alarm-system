@@ -63,6 +63,7 @@ const MainPanel = () => {
     connectionStatus,
     dispatch,
     machineState.messageSend,
+    machineState.reset,
     resetAlarm,
     setTag,
   ]);

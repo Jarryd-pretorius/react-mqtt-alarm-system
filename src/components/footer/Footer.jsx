@@ -34,7 +34,15 @@ const Footer = () => {
         Alarm Log
       </button>
       <button
-        className={` py-4 px-5  ml-auto rounded-lg font-semibold text-xl bg-[#3DA6EC] hover:text-white 
+        className={` py-6 px-10  ml-auto rounded-lg font-semibold text-xl hover:bg-[#3DA6EC] hover:text-white bg-gray-300
+          
+        `}
+        onClick={() => dispatch(setMessageSend(true))}
+      >
+        Reset{" "}
+      </button>
+      <button
+        className={` py-6 px-5 rounded-lg font-semibold text-xl bg-[#3DA6EC] hover:text-white 
           
         `}
         onClick={() => SetFullscreen(!fullScreen)}
@@ -55,14 +63,6 @@ const Footer = () => {
           />
         </svg>
       </button>
-      {/* <button
-        className={` py-6 px-10  ml-auto rounded-lg font-semibold text-xl hover:bg-[#3DA6EC] hover:text-white bg-gray-300
-          
-        `}
-        onClick={() => document.body.requestFullscreen()}
-      >
-        Reset{" "}
-      </button> */}
     </div>
   );
 };
